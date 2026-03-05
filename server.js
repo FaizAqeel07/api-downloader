@@ -8,6 +8,7 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.set('trust proxy', 1);
 
 // ==========================================
 // ZONA 1: SECURITY & INFRASTRUCTURE
@@ -131,4 +132,5 @@ app.listen(PORT, () => {
     console.log(` Sistem Siap di Port ${PORT} (Anti-DDoS Aktif)`);
     console.log(` Buka di browser: http://localhost:${PORT}`);
     console.log(`=================================`);
+
 });
