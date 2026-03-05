@@ -7,10 +7,13 @@ RUN apk add --no-cache python3 ffmpeg
 # Set lokasi folder di dalam server
 WORKDIR /app
 
-# Copy daftar library lu
-COPY package*.json ./
+# HILANGKAN TANDA BINTANG: Cuma copy package.json aja biar gak bentrok OS
+COPY package.json ./
 
-# Install semua library
+# PAKSA INSTALL: Pasang modul debug duluan biar yt-dlp gak rewel
+RUN npm install debug
+
+# Baru install sisa library lu
 RUN npm install
 
 # Copy seluruh file lu ke dalam server
