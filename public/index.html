@@ -84,12 +84,13 @@
             return; 
         }
 
-        btn.innerText = "🔍 Membedah Link...";
+        btn.innerText = " Membedah Link...";
         btn.disabled = true;
         resultDiv.innerHTML = "";
 
         try {
-            const res = await fetch('/api/info', {
+            // ---> INI LINK MESIN BACK4APP LU <---
+            const res = await fetch('https://alldownloader-t0fqnydn.b4a.run/api/info', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url })
@@ -111,10 +112,10 @@
                         <img src="${data.thumbnail}" alt="Cover Video">
                         
                         <button class="btn-dl btn-hd" onclick="unduh('${encodeURIComponent(url)}', 'hd', '${encodedJudul}')">
-                            📥 Download HD
+                             Download HD
                         </button>
                         <button class="btn-dl btn-sd" onclick="unduh('${encodeURIComponent(url)}', 'sd', '${encodedJudul}')">
-                            📱 Download Biasa
+                             Download Biasa
                         </button>
                     </div>
                 `;
@@ -123,6 +124,7 @@
             }
         } catch (err) {
             showToast("Gagal terhubung ke Backend!", "error");
+            console.error("Detail Error:", err);
         }
 
         btn.innerText = "Cari Video";
@@ -130,11 +132,15 @@
     }
 
     function unduh(encodedUrl, quality, encodedTitle) {
-        showToast("⏳ Sedang memproses... File akan terunduh otomatis.", "success");
-        const downloadUrl = `/api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
+        showToast(" Sedang memproses... File akan terunduh otomatis.", "success");
+        
+        // ---> INI LINK DOWNLOAD BACK4APP LU <---
+        const downloadUrl = `https://alldownloader-t0fqnydn.b4a.run/api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
+        
         window.location.href = downloadUrl;
     }
 </script>
 
 </body>
+
 </html>
