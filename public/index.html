@@ -90,7 +90,7 @@
 
         try {
             // ---> INI LINK MESIN BACK4APP LU <---
-            const res = await fetch('https://alldownloader-t0fqnydn.b4a.run/api/info', {
+            const res = await fetch('http://alldownloader-5aekhfob.b4a.run//api/info', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url })
@@ -135,7 +135,7 @@
         showToast(" Sedang memproses... File akan terunduh otomatis.", "success");
         
         // ---> INI LINK DOWNLOAD BACK4APP LU <---
-        const downloadUrl = `https://alldownloader-t0fqnydn.b4a.run/api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
+        const downloadUrl = `http://alldownloader-5aekhfob.b4a.run//api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
         
         window.location.href = downloadUrl;
     }
@@ -143,3 +143,4 @@
 
 </body>
 </html>
+
