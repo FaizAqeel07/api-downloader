@@ -1,19 +1,19 @@
 FROM node:20-alpine
 
-# Install Python & FFmpeg buat senjata yt-dlp
+# Install Python & FFmpeg
 RUN apk add --no-cache python3 ffmpeg
 
+# Bikin folder app & temp dengan izin akses penuh (Syarat Hugging Face)
+RUN mkdir -p /app/temp && chmod 777 /app/temp
 WORKDIR /app
 
-# Copy package.json saja (hindari package-lock biar gak bentrok OS)
 COPY package.json ./
-
-# Paksa install debug dan library lainnya
-RUN npm install debug
 RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+# Hugging Face WAJIB pakai port 7860
+EXPOSE 7860
+ENV PORT=7860
 
 CMD ["npm", "start"]
