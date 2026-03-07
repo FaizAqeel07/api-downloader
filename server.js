@@ -8,7 +8,9 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.set('trust proxy', 1);
+
+// BARIS SAKTI: Wajib ada biar Rate Limiter gak Error 500 di Render/Cloud
+app.set('trust proxy', 1); 
 
 // ==========================================
 // ZONA 1: SECURITY & INFRASTRUCTURE
@@ -16,6 +18,8 @@ app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 app.use(express.json());
+
+// TAMPILAN FRONTEND: Menyuruh Express nampilin isi folder "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rate Limiter: Maksimal 20 request per 10 menit dari 1 IP (Anti-DDoS / Spam)
