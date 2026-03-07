@@ -54,7 +54,6 @@
 <div id="toast">Notifikasi muncul di sini</div>
 
 <script>
-    // FUNGSI SECURITY: Anti DOM XSS
     function escapeHTML(str) {
         if (!str) return 'Video';
         return str.replace(/[&<>'"]/g, tag => ({
@@ -66,7 +65,6 @@
         }[tag]));
     }
 
-    // FUNGSI TOAST PROFESIONAL
     function showToast(message, type = 'error') {
         const toast = document.getElementById("toast");
         toast.innerText = message;
@@ -84,13 +82,13 @@
             return; 
         }
 
-        btn.innerText = " Membedah Link...";
+        btn.innerText = "🔍 Membedah Link...";
         btn.disabled = true;
         resultDiv.innerHTML = "";
 
         try {
-            // ---> INI LINK MESIN BACK4APP LU <---
-            const res = await fetch('https://alldownloader-5aekhfob.b4a.run//api/info', {
+            // PAKAI JALUR LOKAL (Fullstack)
+            const res = await fetch('/api/info', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url })
@@ -101,7 +99,6 @@
             if (responseData.success) {
                 const data = responseData.data;
                 
-                // Menerapkan Security XSS sebelum render ke layar
                 const amanTitle = escapeHTML(data.title);
                 const encodedJudul = encodeURIComponent(amanTitle);
 
@@ -112,10 +109,10 @@
                         <img src="${data.thumbnail}" alt="Cover Video">
                         
                         <button class="btn-dl btn-hd" onclick="unduh('${encodeURIComponent(url)}', 'hd', '${encodedJudul}')">
-                             Download HD
+                            📥 Download HD
                         </button>
                         <button class="btn-dl btn-sd" onclick="unduh('${encodeURIComponent(url)}', 'sd', '${encodedJudul}')">
-                             Download Biasa
+                            📱 Download Biasa
                         </button>
                     </div>
                 `;
@@ -124,7 +121,6 @@
             }
         } catch (err) {
             showToast("Gagal terhubung ke Backend!", "error");
-            console.error("Detail Error:", err);
         }
 
         btn.innerText = "Cari Video";
@@ -132,16 +128,12 @@
     }
 
     function unduh(encodedUrl, quality, encodedTitle) {
-        showToast(" Sedang memproses... File akan terunduh otomatis.", "success");
-        
-        // ---> INI LINK DOWNLOAD BACK4APP LU <---
-        const downloadUrl = `https://alldownloader-5aekhfob.b4a.run//api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
-        
+        showToast("⏳ Sedang memproses... File akan terunduh otomatis.", "success");
+        // PAKAI JALUR LOKAL (Fullstack)
+        const downloadUrl = `/api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
         window.location.href = downloadUrl;
     }
 </script>
 
 </body>
 </html>
-
-
