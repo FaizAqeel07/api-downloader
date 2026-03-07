@@ -11,42 +11,21 @@
     <meta property="og:image" content="https://via.placeholder.com/800x400.png?text=Pro+Video+Downloader">
     <meta property="og:type" content="website">
 
-    <style>
-        :root { --bg: #0f172a; --card: #1e293b; --primary: #3b82f6; --success: #10b981; --error: #ef4444; --text: #f8fafc; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .container { background: var(--card); padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 420px; text-align: center; }
-        h2 { margin-top: 0; color: #38bdf8; letter-spacing: 0.5px; }
-        input { width: 100%; padding: 14px; margin: 15px 0; border-radius: 8px; border: 1px solid #475569; background: var(--bg); color: white; box-sizing: border-box; outline: none; transition: border 0.3s; }
-        input:focus { border-color: var(--primary); }
-        button { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 15px;}
-        button:hover { background: #2563eb; }
-        button:disabled { background: #475569; cursor: not-allowed; }
-        
-        .result-card { background: #334155; border-radius: 10px; padding: 18px; margin-top: 25px; animation: slideUp 0.4s ease-out; }
-        .result-card img { width: 100%; border-radius: 8px; margin-bottom: 15px; object-fit: cover; max-height: 220px; }
-        .badge { background: var(--error); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-dl { display: block; width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; font-weight: bold; color: white; border: none; cursor: pointer; transition: 0.2s;}
-        .btn-hd { background: var(--success); }
-        .btn-sd { background: #64748b; }
-        .btn-dl:hover { filter: brightness(1.1); }
-        
-        /* TOAST NOTIFICATION STYLES */
-        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
-        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-        #toast.error { background-color: var(--error); }
-        #toast.success { background-color: var(--success); }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-    <h2>⚡ Pro Downloader</h2>
-    <p style="color:#94a3b8; font-size:13px; margin-top:-5px;">Support: TikTok, YouTube, IG, X/Twitter</p>
+    <h2>Pro Downloader</h2>
+    <div class="subtitle">Support: TikTok, YouTube, Instagram, X/Twitter</div>
     
-    <input type="text" id="urlInput" placeholder="Tempel URL video di sini..." autocomplete="off">
-    <button id="btnCari" onclick="cariInfo()">Cari Video</button>
+    <input type="text" id="urlInput" placeholder="🔗 Tempel URL video di sini..." autocomplete="off">
+    <button id="btnCari" class="btn-main" onclick="cariInfo()">
+        <span class="spinner" id="loadingSpinner"></span>
+        <span id="btnText">Cari Video</span>
+    </button>
     
     <div id="result"></div>
 </div>
@@ -75,6 +54,8 @@
     async function cariInfo() {
         const url = document.getElementById('urlInput').value.trim();
         const btn = document.getElementById('btnCari');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('loadingSpinner');
         const resultDiv = document.getElementById('result');
 
         if (!url) { 
@@ -82,12 +63,13 @@
             return; 
         }
 
-        btn.innerText = "🔍 Membedah Link...";
+        // Animasi Loading
         btn.disabled = true;
+        btnText.innerText = "Memproses...";
+        spinner.style.display = "inline-block";
         resultDiv.innerHTML = "";
 
         try {
-            // PAKAI JALUR LOKAL (Fullstack)
             const res = await fetch('/api/info', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -98,21 +80,22 @@
 
             if (responseData.success) {
                 const data = responseData.data;
-                
                 const amanTitle = escapeHTML(data.title);
                 const encodedJudul = encodeURIComponent(amanTitle);
 
                 resultDiv.innerHTML = `
                     <div class="result-card">
-                        <span class="badge">${data.platform ? escapeHTML(data.platform) : 'SOSMED'}</span>
-                        <h4 style="margin: 15px 0; font-size: 15px;">${amanTitle}</h4>
+                        <span class="badge">${data.platform ? escapeHTML(data.platform) : 'MEDIA'}</span>
+                        <h4 class="video-title">${amanTitle}</h4>
                         <img src="${data.thumbnail}" alt="Cover Video">
                         
                         <button class="btn-dl btn-hd" onclick="unduh('${encodeURIComponent(url)}', 'hd', '${encodedJudul}')">
-                            📥 Download HD
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download Kualitas HD
                         </button>
                         <button class="btn-dl btn-sd" onclick="unduh('${encodeURIComponent(url)}', 'sd', '${encodedJudul}')">
-                            📱 Download Biasa
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            Download Kualitas SD
                         </button>
                     </div>
                 `;
@@ -123,13 +106,14 @@
             showToast("Gagal terhubung ke Backend!", "error");
         }
 
-        btn.innerText = "Cari Video";
+        // Kembalikan tombol seperti semula
+        btnText.innerText = "Cari Video";
+        spinner.style.display = "none";
         btn.disabled = false;
     }
 
     function unduh(encodedUrl, quality, encodedTitle) {
-        showToast("⏳ Sedang memproses... File akan terunduh otomatis.", "success");
-        // PAKAI JALUR LOKAL (Fullstack)
+        showToast("⏳ File sedang diunduh, mohon tunggu sebentar...", "success");
         const downloadUrl = `/api/download?url=${encodedUrl}&quality=${quality}&title=${encodedTitle}`;
         window.location.href = downloadUrl;
     }
